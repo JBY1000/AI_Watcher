@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebRTC Viewer</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+        header {
+            text-align: center;
+            padding: 1rem;
+            background: #f7f7f7;
+        }
+        #main {
+            display: flex;
+            flex: 1;
+        }
+        #sidebar {
+            flex-basis: 240px; /* Width of the sidebar */
+            background: #eaeaea;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        video {
+            width: 100%;
+            margin-bottom: 1rem;
+            max-width: 200px; /* Maximum width of video */
+        }
+        #content {
+            flex: 1;
+            padding: 1rem;
+        }
+        .question {
+            margin-bottom: 1rem;
+        }
+        @media (max-width: 768px) {
+            #main {
+                flex-direction: column;
+            }
+            #sidebar {
+                flex-basis: auto;
+                flex-direction: row;
+                justify-content: center;
+            }
+            video {
+                max-width: 100px; /* Smaller size on mobile */
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Viewer</h1>
+    </header>
+    <div id="main">
+        <aside id="sidebar">
+            <div id="waitingMessage">Waiting for user to connect...</div>
+            <video id="remoteVideo" autoplay muted></video>
+            <video id="localVideo" autoplay muted></video>
+        </aside>
+        <section id="content">
+            <div class="question">
+                <h2>Question 1</h2>
+                <p>This is where the question will be displayed.</p>
+                <ul>
+                    <li>Choice A</li>
+                    <li>Choice B</li>
+                    <li>Choice C</li>
+                    <li>Choice D</li>
+                </ul>
+            </div>
+            <!-- More questions can be added here -->
+        </section>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="viewer.js"></script>
+</body>
+</html>
