@@ -4,6 +4,8 @@ const localVideoElement = document.getElementById('localVideo');
 const waitingMessage = document.getElementById('waitingMessage');
 let peerConnection;
 
+
+
 function setupPeerConnection() {
     peerConnection = new RTCPeerConnection();
     peerConnection.ontrack = event => {
