@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mobile Sign-In</title>
+    <style>
+        body {
+            text-align: center;
+            margin-top: 50px;
+        }
+        form {
+            margin: auto;
+            width: 80%;
+            max-width: 300px;
+        }
+        input {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 10px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Sign In</h2>
+    <form id="signinForm">
+        <input type="email" id="email" placeholder="Email" required><br>
+        <input type="password" id="password" placeholder="Password" required><br>
+        <button type="submit">Sign In</button>
+    </form>
+
+    <script>
+        document.getElementById('signinForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        var email = document.getElementById('email').value;
+        var password = document.getElementById('password').value;
+        console.log('Email:', email, 'Password:', password);
+        
+        // Placeholder for authentication logic
+        // After successful authentication, redirect to instructions page
+        window.location.href = 'instructions.html'; // Update with the correct URL for your instructions page
+    });
+    </script>
+</body>
+</html>
