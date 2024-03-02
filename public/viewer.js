@@ -3,8 +3,64 @@ const videoElement = document.getElementById('remoteVideo');
 const localVideoElement = document.getElementById('localVideo');
 const waitingMessage = document.getElementById('waitingMessage');
 let peerConnection;
+let model;
+
+// Global variables for the canvas and its context
+let canvas, ctx;
 
 
+// Load Coco SSD model
+async function loadModel() {
+    model = await cocoSsd.load();
+    console.log('Coco SSD model loaded');
+}
+function setupCanvas() {
+    canvas = document.createElement('canvas');
+    document.getElementById('sidebar').appendChild(canvas); // Append canvas to the sidebar
+    ctx = canvas.getContext('2d');
+
+    // Set up the canvas to overlay the video
+    canvas.width = localVideoElement.offsetWidth;
+    canvas.height = localVideoElement.offsetHeight;
+    canvas.style.position = 'absolute';
+    canvas.style.left = localVideoElement.offsetLeft + 'px';
+    canvas.style.top = localVideoElement.offsetTop + 'px';
+}
+
+async function detectObjects() {
+    if (localVideoElement.readyState >= 2 && model) {
+        const predictions = await model.detect(localVideoElement);
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear previous drawings
+
+        // Calculate scaling factors
+        const scaleX = localVideoElement.offsetWidth / localVideoElement.videoWidth;
+        const scaleY = localVideoElement.offsetHeight / localVideoElement.videoHeight;
+
+        predictions.forEach(prediction => {
+            // Apply scaling to the bounding box coordinates and dimensions
+            const [x, y, width, height] = prediction.bbox;
+            const scaledX = x * scaleX;
+            const scaledY = y * scaleY;
+            const scaledWidth = width * scaleX;
+            const scaledHeight = height * scaleY;
+
+            ctx.strokeStyle = 'red';
+            ctx.lineWidth = 4;
+            ctx.strokeRect(scaledX, scaledY, scaledWidth, scaledHeight);
+            ctx.fillStyle = 'red';
+            ctx.fillText(prediction.class + ' ' + Math.round(prediction.score * 100) / 100, scaledX, scaledY);
+        });
+    }
+    requestAnimationFrame(detectObjects);
+}
+
+
+
+// Initialize the canvas when the local video stream is ready
+localVideoElement.onloadedmetadata = () => {
+    setupCanvas();
+    detectObjects();
+};
 
 function setupPeerConnection() {
     peerConnection = new RTCPeerConnection();
@@ -42,6 +98,9 @@ function setupLocalStream() {
     navigator.mediaDevices.getUserMedia({ video: true, audio: true })
         .then(localStream => {
             localVideoElement.srcObject = localStream;
+            loadModel().then(() => {
+                detectObjects();
+            });
         })
         .catch(error => console.error('Error getting local media:', error));
 }
