@@ -8,7 +8,7 @@ let model;
 // Global variables for the canvas and its context
 let canvas, ctx;
 
-
+//---------------@inspired from https://github.com/tensorflow/tfjs-models/blob/master/coco-ssd/demo/index.js ---------------
 // Load Coco SSD model
 async function loadModel() {
     model = await cocoSsd.load();
@@ -61,6 +61,9 @@ localVideoElement.onloadedmetadata = () => {
     setupCanvas();
     detectObjects();
 };
+
+//---------------@inspired from https://github.com/tensorflow/tfjs-models/blob/master/coco-ssd/demo/index.js ---------------
+
 
 function setupPeerConnection() {
     peerConnection = new RTCPeerConnection();
